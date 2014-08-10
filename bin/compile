@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# Heroku has opinions on indentation, let's respect them
+indent() {
+  sed -u 's/^/       /'
+}
+
+BUILD_DIR=$1  # -> temp dir that contains whatever is in the git repo
+CACHE_DIR=$2  # -> use this dir for caching between compiles
+ENV_DIR=$3  # -> environment variables are stored as files inside here
+INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
+# finished, copy results to this dir so they get compressed into a Heroku slug
+
+# make sure dirs exist
+mkdir -p $CACHE_DIR
+mkdir -p $INSTALL_DIR
+
+echo "-----> Use build cache"
+if [ -d $CACHE_DIR/bin ]; then
+    echo "Get buildout results from the previous build" | indent
+    cp -r $CACHE_DIR/bin  $BUILD_DIR/
+    cp -r $CACHE_DIR/eggs  $BUILD_DIR/
+    cp -r $CACHE_DIR/parts  $BUILD_DIR/
+    if [ -d $BUILD_DIR/var ]; then
+        cp -r $CACHE_DIR/var  $BUILD_DIR/
+    fi
+else
+    echo "Cache empty, start from scratch" | indent
+fi
+
+echo "-----> Read BUILDOUT_CFG from env vars, or use default"
+if [ -f $ENV_DIR/BUILDOUT_CFG ]; then
+    export "BUILDOUT_CFG=$(cat $ENV_DIR/BUILDOUT_CFG)"
+    echo "Found ${BUILDOUT_CFG}" | indent
+else
+    export "BUILDOUT_CFG=buildout.cfg"
+    echo "Using default: buildout.cfg" | indent
+fi
+
+echo "-----> Read BUILDOUT_VERBOSITY from env vars, or use default"
+if [ -f $ENV_DIR/BUILDOUT_VERBOSITY ]; then
+    export "BUILDOUT_VERBOSITY=$(cat $ENV_DIR/BUILDOUT_VERBOSITY)"
+    echo "Use verbosity: ${BUILDOUT_VERBOSITY}" | indent
+else
+    export "BUILDOUT_VERBOSITY="
+    echo "Use default buildout verbosity" | indent
+fi
+
+echo "-----> Read BOOTSTRAP_PY_URL from env vars, or use default"
+if [ -f $ENV_DIR/BOOTSTRAP_PY_URL ]; then
+    export "BOOTSTRAP_PY_URL=$(cat $ENV_DIR/BOOTSTRAP_PY_URL)"
+    echo "Use custom bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
+else
+    export "BOOTSTRAP_PY_URL=http://downloads.buildout.org/2/bootstrap.py"
+    echo "Use default bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
+fi
+
+cd $BUILD_DIR
+echo "-----> Init buildout"
+curl -OL "${BOOTSTRAP_PY_URL}"
+python bootstrap.py -c $BUILDOUT_CFG
+echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
+bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
+
+echo "-----> Copy results to cache"
+cp -r $BUILD_DIR/bin $CACHE_DIR
+cp -r $BUILD_DIR/eggs $CACHE_DIR
+cp -r $BUILD_DIR/parts $CACHE_DIR
+if [ -d $BUILD_DIR/var ]; then
+    cp -r $BUILD_DIR/var $CACHE_DIR
+fi
+
+echo "-----> Copy results to slug"
+cp -r $BUILD_DIR/bin $INSTALL_DIR
+cp -r $BUILD_DIR/eggs $INSTALL_DIR
+cp -r $BUILD_DIR/parts $INSTALL_DIR
+if [ -d $BUILD_DIR/var ]; then
+    cp -r $BUILD_DIR/var $INSTALL_DIR
+fi
+
+echo "Done" | indent

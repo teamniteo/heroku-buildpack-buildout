@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ -n $(bin/sphinx-build --version | grep "Sphinx (sphinx-build)") ]]; then
+    echo "buildout successful."
+    exit 0
+else
+    echo "buildout failed."
+    exit 1
+fi
