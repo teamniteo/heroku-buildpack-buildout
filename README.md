@@ -3,13 +3,15 @@ Heroku buildpack: Buildout
 
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for Python apps, powered by [Buildout](http://www.buildout.org/en/latest/).
 
+[![Build Status](https://travis-ci.org/niteoweb/heroku-buildpack-buildout.svg?branch=master)](https://travis-ci.org/niteoweb/heroku-buildpack-buildout)
+
 
 Usage
 -----
 
 Example usage, first create a Heroku app:
 
-    $ heroku create --buildpack https://github.com/ddollar/heroku-buildpack-multi
+    $ heroku create
 
 
 This buildpack depends on the [official Heroku Python buildpack](https://github.com/heroku/heroku-buildpack-python), so you need to configure your app with support for multi-buildpacks, by setting the following environment variable:
@@ -43,15 +45,21 @@ Lastly, push your changes to Heroku to build your app:
 
     $ git push heroku master
     ...
+    -----> Fetching custom git buildpack... done
     -----> Buildout app detected
-    -----> Installing runtime (python-2.7.8)
-    -----> Installing dependencies using pip
-           Downloading/unpacking zc.buildout (from -r requirements.txt (line 1))
-           Installing collected packages: zc.buildout
-           Successfully installed zc.buildout
-           Cleaning up...
+    -----> Use build cache
+    -----> Read BUILDOUT_CFG from env vars, or use default
+    -----> Read BUILDOUT_VERBOSITY from env vars, or use default
+    -----> Read BOOTSTRAP_PY_URL from env vars, or use default
+    -----> Init buildout
+    ...
+    -----> Run bin/buildout -c buildout.cfg
+    ...
+    -----> Copy results to cache
+    -----> Copy results to slug
+           Done
     -----> Discovering process types
-           Procfile declares types -> (none)
+           Procfile declares types -> web
 
 
 Options
