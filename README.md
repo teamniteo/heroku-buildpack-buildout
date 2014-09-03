@@ -32,8 +32,10 @@ The buildpack will detect your app as a Buildout-powered-Python app if the repo 
 
     $ cat buildout.cfg
     [buildout]
+    relative-paths = true
     ...
 
+Note that you have to set ``relative-paths = true`` in your ``buildout.cfg`` file.
 
 Next, you need to tell Heroku how to run your app once Buildout builds it:
 
@@ -107,6 +109,8 @@ Use arbitrary ``*.cfg`` file
 To run an arbitrary *.cfg file such as ``heroku.cfg``, set the following environment variable:
 
     $ heroku config:add BUILDOUT_CFG=heroku.cfg
+
+Note that you have to set ``relative-paths = true`` in your arbitrary *.cfg file.
 
 
 Use arbitrary ``bootstrap.py`` file
