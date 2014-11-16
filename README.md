@@ -25,10 +25,8 @@ Then specify the list of buildpacks your app should use in the `.buildpacks` fil
     https://github.com/niteoweb/heroku-buildpack-buildout.git
 
 
-The buildpack will detect your app as a Buildout-powered-Python app if the repo has `requirements.txt` and `buildout.cfg` files in the root. The buildpack will use Pip to install Buildout, then use Buildout to build your environment.
-
-    $ cat requirements.txt
-    zc.buildout==2.2.1
+The buildpack will detect your app as a Buildout-powered-Python app if the repo has `buildout.cfg` file in the root.
+The python buildpack will download the specific Python version and create a virtualenv. The buildout buildpack downloads bootstrap.py and then use Buildout to build your environment.
 
     $ cat buildout.cfg
     [buildout]
@@ -67,19 +65,12 @@ Lastly, push your changes to Heroku to build your app:
 Options
 =======
 
-Set Buildout version
---------------------
-
-Since Pip looks into the `requirements.txt` file to see which Buildout version to install, you can  specify an arbitrary Buildout version in this file.
-
-    $ cat requirements.txt
-    zc.buildout==2.2.1
-
-
 Set Python version
 ------------------
 
 You can set an arbitrary Python version with a `runtime.txt` file.
+You need an empty `requirements.txt` file to trigger the python buildpack.
+An empty `requirements.txt` and a `runtime.txt` is only needed if you want to use a specific Python version. If those files are missing, it will simply use the globally installed Python.
 
     $ cat runtime.txt
     python-2.7.8
