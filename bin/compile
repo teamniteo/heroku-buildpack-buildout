@@ -17,8 +17,6 @@ INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
 mkdir -p $CACHE_DIR
 mkdir -p $INSTALL_DIR
 
-ls $ENV_DIR
-cat $ENV_DIR/PYPICLOUD_USERNAME
 if [ -f $ENV_DIR/PYPICLOUD_USERNAME ] && [ -f $ENV_DIR/PYPICLOUD_PASSWORD ]; then
     echo "-----> Use PYPICLOUD credentials"
     echo "[distutils]" >> ~/.pypirc
@@ -27,8 +25,6 @@ if [ -f $ENV_DIR/PYPICLOUD_USERNAME ] && [ -f $ENV_DIR/PYPICLOUD_PASSWORD ]; the
     echo "repository = https://pypicloud.niteoweb.com" >> ~/.pypirc
     echo "username = $(cat $ENV_DIR/PYPICLOUD_USERNAME)" >> ~/.pypirc
     echo "password = $(cat $ENV_DIR/PYPICLOUD_PASSWORD)" >> ~/.pypirc
-    cat ~/.pypirc
-    pwd ~
 fi
 
 echo "-----> Use build cache"
