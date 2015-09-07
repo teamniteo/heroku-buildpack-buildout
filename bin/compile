@@ -60,7 +60,7 @@ fi
 cd $BUILD_DIR
 echo "-----> Init buildout"
 curl -OL "${BOOTSTRAP_PY_URL}"
-python bootstrap.py -c $BUILDOUT_CFG
+python bootstrap.py -v 2.4.1 --setuptools-version=18.2 -c $BUILDOUT_CFG
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
 
