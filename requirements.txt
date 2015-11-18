@@ -1,1 +1,8 @@
-zc.buildout==2.2.1
+# This file needs to be here to keep the Python buildpack happy, otherwise it
+# would pip install the setup.py and pull all eggs listed in setup.py into
+# pip's environment -> we don't want that because we use zc.buildout to prepare
+# our environment.
+#
+# Besides being here, this file needs at least one item, so we're installing
+# some jokes.
+pyjokes
