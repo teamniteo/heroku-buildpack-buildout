@@ -69,15 +69,17 @@ fi
 
 # create a symlink to where python will be located when this slug is in
 # heroku runtime
-mkdir -p /app/.heroku/python/bin/
-ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
+#mkdir -p /app/.heroku/python/bin/
+#ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 
 cd $BUILD_DIR
 export "PYTHON_VERSION=$(/app/.heroku/python/bin/python --version)"
 echo "-----> Bootstrap buildout using Python provided by heroku-buildpack-python:"
 echo "$PYTHON_VERSION" | indent
 curl -OL "${BOOTSTRAP_PY_URL}"
-/app/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG
+#/app/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG
+python bootstrap.py -c $BUILDOUT_CFG
+
 
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
