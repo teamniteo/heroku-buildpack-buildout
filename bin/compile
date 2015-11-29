@@ -62,6 +62,7 @@ ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 echo "foo"
 chmod +x $BUILD_DIR/.profile.d/python.sh
 $BUILD_DIR/.profile.d/python.sh
+echo $PATH
 python --version
 which python
 printenv
