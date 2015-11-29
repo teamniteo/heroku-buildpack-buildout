@@ -64,6 +64,11 @@ fi
 mkdir -p /app/.heroku/python/bin/
 ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 
+echo "foo"
+$BUILD_DIR/.heroku/python/bin/python --version
+echo "bar"
+/app/.heroku/python/bin/python --version
+
 cd $BUILD_DIR
 mkdir -p eggs  # zc.buildout expects this folder to exist
 
