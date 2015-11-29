@@ -61,15 +61,15 @@ fi
 
 # create a symlink to where python will be located when this slug is in
 # heroku runtime
-#mkdir -p /app/.heroku/python/bin/
-#ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
+mkdir -p /app/.heroku/python/bin/
+ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 
 cd $BUILD_DIR
 mkdir -p eggs  # zc.buildout expects this folder to exist
 
 echo "-----> Bootstrap buildout using Python provided by heroku-buildpack-python:"
-echo "$(python --version)" | indent
-python bootstrap.py -c $BUILDOUT_CFG
+echo "$(/app/.heroku/python/bin/python --version)" | indent
+/app/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG
 
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
