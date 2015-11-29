@@ -63,6 +63,8 @@ echo "foo"
 chmod +x $BUILD_DIR/.profile.d/python.sh
 $BUILD_DIR/.profile.d/python.sh
 python --version
+which python
+printenv
 echo "bar"
 $BUILD_DIR/.heroku/python/bin/python --version
 echo "baz"
