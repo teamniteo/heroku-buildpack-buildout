@@ -70,7 +70,7 @@ export LD_LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LD_LIBRA
 export LANG=${LANG:-en_US.UTF-8}
 export PYTHONHASHSEED=${PYTHONHASHSEED:-random}
 export PYTHONPATH=${PYTHONPATH:-/app/}
-echo $PATH
+printenv
 python --version
 which python
 printenv
