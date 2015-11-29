@@ -65,6 +65,9 @@ unset PYTHONHOME PYTHONPATH LD_LIBRARY_PATH LIBRARY_PATH
 
 #chmod +x $BUILD_DIR/.profile.d/python.sh
 #$BUILD_DIR/.profile.d/python.sh
+echo "/app/.heroku/python/lib" > /etc/ld.so.conf.d/libpython3.5.conf
+ldconfig
+echo "foo2"
 export PATH=/app/.heroku/python/bin:/usr/local/bin:/usr/bin:/bin
 export PYTHONUNBUFFERED=true
 export PYTHONHOME=/app/.heroku/python
