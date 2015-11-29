@@ -22,14 +22,10 @@ if ! [ -f $BUILD_DIR/bootstrap.py ]; then
     exit 1
 fi
 
-if [ -f $ENV_DIR/PYPI_USERNAME ] && [ -f $ENV_DIR/PYPI_PASSWORD ] && [ -f $ENV_DIR/PYPI_URL ]; then
-    echo "-----> Use Third-party PYPI"
-    echo "[distutils]" >> ~/.pypirc
-    echo "index-servers = third_party_pypi" >> ~/.pypirc
-    echo "[third_party_pypi]" >> ~/.pypirc
-    echo "repository = $(cat $ENV_DIR/PYPI_URL)" >> ~/.pypirc
-    echo "username = $(cat $ENV_DIR/PYPI_USERNAME)" >> ~/.pypirc
-    echo "password = $(cat $ENV_DIR/PYPI_PASSWORD)" >> ~/.pypirc
+if [ -f $ENV_DIR/PYPICLOUD_USERNAME ] && [ -f $ENV_DIR/PYPICLOUD_PASSWORD ]; then
+    echo "-----> Use PYPICloud"
+    export "PYPICLOUD_USERNAME=$(cat $ENV_DIR/PYPICLOUD_USERNAME)"
+    export "PYPICLOUD_PASSWORD=$(cat $ENV_DIR/PYPICLOUD_PASSWORD)"
 fi
 
 echo "-----> Use build cache"
