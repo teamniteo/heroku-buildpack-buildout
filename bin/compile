@@ -10,17 +10,12 @@ indent() {
 BUILD_DIR=$1  # -> temp dir that contains whatever is in the git repo
 CACHE_DIR=$2  # -> use this dir for caching between compiles
 ENV_DIR=$3  # -> environment variables are stored as files inside here
-INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
+#INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
 # finished, copy results to this dir so they get compressed into a Heroku slug
 
 # make sure dirs exist
 mkdir -p $CACHE_DIR
-mkdir -p $INSTALL_DIR
-
-if ! [ -f $BUILD_DIR/bootstrap.py ]; then
-    echo "-----> File bootstrap.py not found, failing." | indent
-    exit 1
-fi
+#mkdir -p $INSTALL_DIR
 
 if [ -f $ENV_DIR/PYPICLOUD_USERNAME ] && [ -f $ENV_DIR/PYPICLOUD_PASSWORD ]; then
     echo "-----> Use PYPICloud"
@@ -65,6 +60,7 @@ mkdir -p /app/.heroku/python/bin/
 ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 
 echo "foo"
+ls $ENV_DIR
 $BUILD_DIR/.heroku/python/bin/python --version
 echo "bar"
 /app/.heroku/python/bin/python --version
@@ -80,6 +76,11 @@ echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
 
 echo "-----> Copy results to cache"
+rm -rf $CACHE_DIR/bin
+rm -rf $CACHE_DIR/eggs
+rm -rf $CACHE_DIR/parts
+rm -rf $CACHE_DIR/var
+
 cp -r $BUILD_DIR/bin $CACHE_DIR
 cp -r $BUILD_DIR/eggs $CACHE_DIR
 cp -r $BUILD_DIR/parts $CACHE_DIR
@@ -87,12 +88,12 @@ if [ -d $BUILD_DIR/var ]; then
     cp -r $BUILD_DIR/var $CACHE_DIR
 fi
 
-echo "-----> Copy results to slug"
-cp -r $BUILD_DIR/bin $INSTALL_DIR
-cp -r $BUILD_DIR/eggs $INSTALL_DIR
-cp -r $BUILD_DIR/parts $INSTALL_DIR
-if [ -d $BUILD_DIR/var ]; then
-    cp -r $BUILD_DIR/var $INSTALL_DIR
-fi
+# echo "-----> Copy results to slug"
+# cp -r $BUILD_DIR/bin $INSTALL_DIR
+# cp -r $BUILD_DIR/eggs $INSTALL_DIR
+# cp -r $BUILD_DIR/parts $INSTALL_DIR
+# if [ -d $BUILD_DIR/var ]; then
+#     cp -r $BUILD_DIR/var $INSTALL_DIR
+# fi
 
 echo "Done" | indent
