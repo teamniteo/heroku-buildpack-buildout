@@ -59,29 +59,6 @@ fi
 mkdir -p /app/.heroku/
 ln -s $BUILD_DIR/.heroku/python /app/.heroku/python
 
-echo "foo"
-# Sanitizing environment variables.
-unset PYTHONHOME PYTHONPATH LD_LIBRARY_PATH LIBRARY_PATH
-
-#chmod +x $BUILD_DIR/.profile.d/python.sh
-#$BUILD_DIR/.profile.d/python.sh
-export PATH=/app/.heroku/python/bin:/usr/local/bin:/usr/bin:/bin
-export PYTHONUNBUFFERED=true
-export PYTHONHOME=/app/.heroku/python
-export LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LD_LIBRARY_PATH
-export LANG=${LANG:-en_US.UTF-8}
-export PYTHONHASHSEED=${PYTHONHASHSEED:-random}
-export PYTHONPATH=${PYTHONPATH:-/app/}
-ls /app/.heroku/python/
-printenv
-python --version
-which python
-echo "bar"
-$BUILD_DIR/.heroku/python/bin/python --version
-echo "baz"
-/app/.heroku/python/bin/python --version
-
 cd $BUILD_DIR
 mkdir -p eggs  # zc.buildout expects this folder to exist
 
