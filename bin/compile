@@ -62,16 +62,16 @@ ln -s $BUILD_DIR/.heroku/python /app/.heroku/python
 # Sanitizing environment variables.
 #unset PYTHONHOME PYTHONPATH LD_LIBRARY_PATH LIBRARY_PATH
 
-chmod +x $BUILD_DIR/.profile.d/python.sh
-$BUILD_DIR/.profile.d/python.sh
-# export PATH=/app/.heroku/python/bin:/usr/local/bin:/usr/bin:/bin
-# export PYTHONUNBUFFERED=true
-# export PYTHONHOME=/app/.heroku/python
-# export LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LIBRARY_PATH
-# export LD_LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LD_LIBRARY_PATH
-# export LANG=${LANG:-en_US.UTF-8}
-# export PYTHONHASHSEED=${PYTHONHASHSEED:-random}
-# export PYTHONPATH=${PYTHONPATH:-/app/}
+#chmod +x $BUILD_DIR/.profile.d/python.sh
+#$BUILD_DIR/.profile.d/python.sh
+export PATH=/app/.heroku/python/bin:/usr/local/bin:/usr/bin:/bin
+export PYTHONUNBUFFERED=true
+export PYTHONHOME=/app/.heroku/python
+export LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LD_LIBRARY_PATH
+export LANG=${LANG:-en_US.UTF-8}
+export PYTHONHASHSEED=${PYTHONHASHSEED:-random}
+export PYTHONPATH=${PYTHONPATH:-/app/}
 # ls /app/.heroku/python/
 # printenv
 python --version
