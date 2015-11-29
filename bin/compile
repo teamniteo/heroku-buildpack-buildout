@@ -81,16 +81,14 @@ fi
 # echo "baz"
 # /app/.heroku/python/bin/python --version
 
-
-export PYTHONHOME=$BUILD_DIR/.heroku/python
-export PATH=$BUILD_DIR/.heroku/python:$PATH
-export LIBRARY_PATH=$BUILD_DIR/.heroku/python/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$BUILD_DIR/.heroku/python/lib:$LD_LIBRARY_PATH
-
 cd $BUILD_DIR
 mkdir -p eggs  # zc.buildout expects this folder to exist
 
 echo "-----> Bootstrap buildout using Python provided by heroku-buildpack-python:"
+export PYTHONHOME=$BUILD_DIR/.heroku/python
+export PATH=$BUILD_DIR/.heroku/python:$PATH
+export LIBRARY_PATH=$BUILD_DIR/.heroku/python/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$BUILD_DIR/.heroku/python/lib:$LD_LIBRARY_PATH
 echo "$($BUILD_DIR/.heroku/python/bin/python --version)" | indent
 $BUILD_DIR/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG
 
