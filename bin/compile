@@ -62,8 +62,10 @@ ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 echo "foo"
 chmod +x $BUILD_DIR/.profile.d/python.sh
 $BUILD_DIR/.profile.d/python.sh
-$BUILD_DIR/.heroku/python/bin/python --version
+python --version
 echo "bar"
+$BUILD_DIR/.heroku/python/bin/python --version
+echo "baz"
 /app/.heroku/python/bin/python --version
 
 cd $BUILD_DIR
