@@ -67,12 +67,9 @@ fi
 cd $BUILD_DIR
 mkdir -p eggs  # zc.buildout expects this folder to exist
 
-export "PYTHON_VERSION=$(/app/.heroku/python/bin/python --version)"
 echo "-----> Bootstrap buildout using Python provided by heroku-buildpack-python:"
-echo "$PYTHON_VERSION" | indent
-#/app/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG
+echo "$(python --version)" | indent
 python bootstrap.py -c $BUILDOUT_CFG
-
 
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
