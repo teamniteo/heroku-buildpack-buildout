@@ -60,6 +60,9 @@ mkdir -p /app/.heroku/python/bin/
 ln -s $BUILD_DIR/.heroku/python/bin/python /app/.heroku/python/bin/python
 
 echo "foo"
+# Sanitizing environment variables.
+unset PYTHONHOME PYTHONPATH LD_LIBRARY_PATH LIBRARY_PATH
+
 #chmod +x $BUILD_DIR/.profile.d/python.sh
 #$BUILD_DIR/.profile.d/python.sh
 export PATH=/app/.heroku/python/bin:/usr/local/bin:/usr/bin:/bin
