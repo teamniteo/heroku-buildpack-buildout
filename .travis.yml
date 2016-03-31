@@ -1,4 +1,5 @@
 env:
+  sudo: false
   global:
   - secure: |-
       A4ztPPrAS7WiDI6n9sHbARpydhO72Fm4lg42RQs7w+t92aKanfw9TDVBfH8KoEGogg
