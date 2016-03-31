@@ -69,20 +69,20 @@ else
 fi
 
 echo "-----> Read PIP_VERSION from env vars, or use default"
-if [ -f $ENV_DIR/PIP_VERSION ]; then
-    export "PIP_VERSION=$(cat $ENV_DIR/PIP_VERSION)"
-    echo "Use pip version: ${PIP_VERSION}" | indent
+if [ -f $ENV_DIR/VERSION_PIP ]; then
+    export "VERSION_PIP=$(cat $ENV_DIR/VERSION_PIP)"
+    echo "Use pip version: ${VERSION_PIP}" | indent
 else
-    export "PIP_VERSION=8.1.1"
-    echo "Use default pip version: 8.1.1" | indent
+    export "VERSION_PIP=8.1.1"
+    echo "Use default pip version: ${VERSION_PIP}" | indent
 fi
 
-echo "-----> Read SETUPTOOLS_VERSION from env vars, or use default"
-if [ -f $ENV_DIR/SETUPTOOLS_VERSION ]; then
-    export "SETUPTOOLS_VERSION=$(cat $ENV_DIR/SETUPTOOLS_VERSION)"
-    echo "Use setuptools version: ${SETUPTOOLS_VERSION}" | indent
+echo "-----> Read VERSION_SETUPTOOLS from env vars, or use default"
+if [ -f $ENV_DIR/VERSION_SETUPTOOLS ]; then
+    export "VERSION_SETUPTOOLS=$(cat $ENV_DIR/VERSION_SETUPTOOLS)"
+    echo "Use setuptools version: ${VERSION_SETUPTOOLS}" | indent
 else
-    export "SETUPTOOLS_VERSION=20.4"
+    export "VERSION_SETUPTOOLS=20.4"
     echo "Use default setuptools version: 20.4" | indent
 fi
 
@@ -105,8 +105,8 @@ export PKG_CONFIG_PATH=/app/.heroku/vendor/lib/pkg-config:$BUILD_DIR/.heroku/ven
 cd $BUILD_DIR
 mkdir -p eggs  # zc.buildout expects this folder to exist
 
-echo "-----> Pin pip and setuptools to versions set in PIP_VERSION and SETUPTOOLS_VERSION."
-/app/.heroku/python/bin/pip install pip==$PIP_VERSION setuptools==$SETUPTOOLS_VERSION -U
+echo "-----> Pin pip and setuptools to versions set in VERSION_PIP and VERSION_SETUPTOOLS."
+/app/.heroku/python/bin/pip install pip==$VERSION_PIP setuptools==$VERSION_SETUPTOOLS -U
 
 echo "-----> Bootstrap buildout using Python provided by heroku-buildpack-python:"
 echo "$(/app/.heroku/python/bin/python --version)" | indent
