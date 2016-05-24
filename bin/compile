@@ -16,7 +16,7 @@ mkdir -p $CACHE_DIR
 
 if [ ! -f "$BUILD_DIR/.heroku/python/bin/python" ]; then
     echo "-----> This buildpack depends on heroku-buildpack-python."
-    echo "You need to run heroku-buildpack-python before heroku-buildpack-buildout" | ident
+    echo "You need to run heroku-buildpack-python before heroku-buildpack-buildout" | indent
     exit 1
 fi
 
