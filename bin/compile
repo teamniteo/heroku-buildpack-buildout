@@ -110,7 +110,7 @@ echo "-----> Pin pip and setuptools to versions set in VERSION_PIP and VERSION_S
 
 echo "-----> Bootstrap buildout using Python provided by heroku-buildpack-python:"
 echo "$(/app/.heroku/python/bin/python --version)" | indent
-/app/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG $BOOTSTRAP_VERBOSITY --setuptools-version==$VERSION_SETUPTOOLS
+/app/.heroku/python/bin/python bootstrap.py -c $BUILDOUT_CFG $BOOTSTRAP_VERBOSITY --setuptools-version $VERSION_SETUPTOOLS
 
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
