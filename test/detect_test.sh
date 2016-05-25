@@ -7,10 +7,13 @@ testDetect()
   touch ${BUILD_DIR}/buildout.cfg
   touch ${BUILD_DIR}/bootstrap.sh
   
-  capture ${BUILDPACK_HOME}/bin/detect ${BUILD_DIR}
-  
-  assertEquals 0 ${rtrn}
-  assertEquals "Buildout" "$(cat ${STD_OUT})"
-  assertEquals "" "$(cat ${STD_ERR})"
+  detect
+  assertCapturedSuccess
+  assertCaptured "Buildout"
 }
 
+testDetectFail()
+{
+  detect
+  assertEquals 1 ${rtrn}
+}
