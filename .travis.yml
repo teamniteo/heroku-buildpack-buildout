@@ -10,7 +10,7 @@ before_install:
 
 install: true
 
-script: /tmp/testrunner/bin/run -c .
+script: sudo -E /tmp/testrunner/bin/run -c .
 
 env:
   global:
