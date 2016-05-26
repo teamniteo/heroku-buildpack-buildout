@@ -27,12 +27,6 @@ prepareBuildout()
   cp ${BUILDPACK_HOME}/buildout.cfg ${BUILD_DIR}/buildout.cfg
 }
 
-localCache()
-{
-  # XXX: copy cached eggs
-  cp -r ${BUILDPACK_HOME}/cache/eggs ${BUILD_DIR}/
-}
-
 testPythonBuildpackFail()
 {
   # make sure the test failed if python not found in $BUILD_DIR/.heroku/
@@ -49,8 +43,6 @@ testCompile()
   prepareBuildout
   # clean up before compiling
   cleanUp
-  # XXX
-  localCache
 
   compile
   assertEquals 0 ${rtrn}
