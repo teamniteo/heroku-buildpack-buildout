@@ -46,6 +46,8 @@ testCompile()
 
   compile
   assertEquals 0 ${rtrn}
+  echo "`cat $STD_ERR`"
+  echo "`cat $STD_OUT`"
   assertNotCaptured "-----> Use PYPICloud"
   assertCaptured "Cache empty, start from scratch"
   assertCaptured "Using default: buildout.cfg"
@@ -90,6 +92,8 @@ compileWithEnvVars()
 
   compile
   assertEquals 0 ${rtrn}
+  echo "`cat $STD_ERR`"
+  echo "`cat $STD_OUT`"
   assertCaptured "Get buildout results from the previous build" # cache worked
   assertCaptured "-----> Use PYPICloud"
   assertCaptured "Found ${BUILDOUT_CFG}"
