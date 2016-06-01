@@ -8,9 +8,10 @@ afterSetUp()
   APP_DIR="${OUTPUT_DIR}/app"
 
   if [ ! -d $BUILD_DIR/.heroku ]; then
+    mkdir ${BUILD_DIR}/.heroku
     # use system virtualenv to create python inside BUILD_DIR/.heroku
-    mkdir -p ${BUILD_DIR}/.heroku/python
-    virtualenv ${BUILD_DIR}/.heroku/python
+    # or just create a symlink if tests run on heroku
+    virtualenv ${BUILD_DIR}/.heroku/python || ln -s ${BUILDPACK_HOME}/.heroku/python $BUILD_DIR/.heroku/python
   fi
 
   # copy default bootstrap.py & buildout.cfg to BUILD_DIR
