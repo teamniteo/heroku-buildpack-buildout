@@ -2,26 +2,17 @@
 
 . ${BUILDPACK_TEST_RUNNER_HOME}/lib/test_utils.sh
 
-setupPythonEnv()
+afterSetUp()
 {
+  # set test APP_DIR inside tmp folder
+  APP_DIR="${OUTPUT_DIR}/app"
+
   if [ ! -d $BUILD_DIR/.heroku ]; then
-    # this test is not running on heroku
     # use system virtualenv to create python inside BUILD_DIR/.heroku
     mkdir -p ${BUILD_DIR}/.heroku/python
     virtualenv ${BUILD_DIR}/.heroku/python
   fi
-}
 
-cleanUp()
-{
-  # remove python symlink in /app/.heroku/ if existed
-  if [ -L "/app/.heroku/python" ]; then
-      rm -f /app/.heroku/python
-  fi
-}
-
-prepareBuildout()
-{
   # copy default bootstrap.py & buildout.cfg to BUILD_DIR
   cp ${BUILDPACK_HOME}/bootstrap.py ${BUILD_DIR}/bootstrap.py
   cp ${BUILDPACK_HOME}/buildout.cfg ${BUILD_DIR}/buildout.cfg
@@ -30,21 +21,16 @@ prepareBuildout()
 testPythonBuildpackFail()
 {
   # make sure the test failed if python not found in $BUILD_DIR/.heroku/
-  compile
+  rm -rf ${BUILD_DIR}/.heroku/python
+
+  capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
   assertEquals 1 ${rtrn}
   assertCaptured "-----> This buildpack depends on heroku-buildpack-python."
 }
 
 testCompile()
 {
-  # install python virtualenv if test not running on heroku
-  setupPythonEnv
-  # prepare test buildout
-  prepareBuildout
-  # clean up before compiling
-  cleanUp
-
-  compile
+  capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
   assertEquals 0 ${rtrn}
   assertNotCaptured "-----> Use PYPICloud"
   assertCaptured "Cache empty, start from scratch"
@@ -54,8 +40,8 @@ testCompile()
   assertCaptured "Use default pip version: ${VERSION_PIP}"
   assertCaptured "Use default setuptools version: 20.4"
 
-  assertTrue "/app/.heroku/ should be present in runtime." "[ -d /app/.heroku ]"
-  assertTrue "python symlink should be present." "[ -L /app/.heroku/python ]"
+  assertTrue "$APP_DIR/.heroku/ should be present in runtime." "[ -d $APP_DIR/.heroku ]"
+  assertTrue "python symlink should be present." "[ -L $APP_DIR/.heroku/python ]"
   assertTrue "eggs should be present in build dir." "[ -d $BUILD_DIR/eggs ]"
   assertTrue "eggs should be present in cache dir." "[ -d $CACHE_DIR/eggs ]"
   assertTrue "Sphinx should be present in bin." "[ -f $BUILD_DIR/bin/sphinx-build ]"
@@ -64,7 +50,9 @@ testCompile()
 
   # Run again to ensure cache is used.
   rm -rf ${BUILD_DIR}/*
+  rm -f $APP_DIR/.heroku/python
   resetCapture
+  afterSetUp
   compileWithEnvVars
 }
 
@@ -83,12 +71,7 @@ compileWithEnvVars()
   # set setuptools version
   echo "20.4" > $ENV_DIR/VERSION_SETUPTOOLS
 
-  # prepare test buildout
-  prepareBuildout
-  # clean up before compiling
-  cleanUp
-
-  compile
+  capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
   assertEquals 0 ${rtrn}
   assertCaptured "Get buildout results from the previous build" # cache worked
   assertCaptured "-----> Use PYPICloud"
