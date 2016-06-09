@@ -35,7 +35,7 @@ testCompile()
   assertEquals 0 ${rtrn}
   assertNotCaptured "-----> Use PYPICloud"
   assertCaptured "Cache empty, start from scratch"
-  assertCaptured "Using default: buildout.cfg"
+  assertCaptured "Use default buildout.cfg"
   assertCaptured "Use default buildout verbosity"
   assertCaptured "Use default bootstrap verbosity"
   assertCaptured "Use default pip version: ${VERSION_PIP}"

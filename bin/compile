@@ -11,7 +11,7 @@ BUILD_DIR=$1  # -> temp dir that contains whatever is in the git repo
 CACHE_DIR=$2  # -> use this dir for caching between compiles
 ENV_DIR=$3  # -> environment variables are stored as files inside here
 # where Python will be located when this slug is in heroku runtime
-# deafult to /app if not set
+# default to /app if not set
 APP_DIR=${4:-/app}
 
 # make sure dirs exist
@@ -50,7 +50,7 @@ if [ -f $ENV_DIR/BUILDOUT_CFG ]; then
     echo "Found ${BUILDOUT_CFG}" | indent
 else
     export "BUILDOUT_CFG=buildout.cfg"
-    echo "Using default: buildout.cfg" | indent
+    echo "Use default buildout.cfg" | indent
 fi
 
 echo "-----> Read BUILDOUT_VERBOSITY from env vars, or use default"
