@@ -1,24 +1,17 @@
+language: python
+
+branches:
+  only:
+    - master
+
+before_install:
+  - git clone https://github.com/kward/shunit2.git /tmp/shunit2
+  - git clone https://github.com/heroku/heroku-buildpack-testrunner.git /tmp/testrunner
+
+install: true
+
+script: /tmp/testrunner/bin/run -c .
+
 env:
-  sudo: false
   global:
-  - secure: |-
-      A4ztPPrAS7WiDI6n9sHbARpydhO72Fm4lg42RQs7w+t92aKanfw9TDVBfH8KoEGogg
-      bAFvSa43YiaTxdQz2TXr/gBUKCm7Or+SEXYc6v77G/n5lsEFwI4J5fT6uuqZ+zDZhN
-      lxRHQQ9YGFktl5UG+dVEYWCXpOPi7XAOKUSUjhE="  # HEROKU_API_KEY for travis@niteoweb.com
-
-before_script:
-  - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-  - git remote add heroku git@heroku.com:heroku-buildpack-buildout.git
-  - echo "Host heroku.com" >> ~/.ssh/config
-  - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
-  - echo "   CheckHostIP no" >> ~/.ssh/config
-  - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-  - heroku keys:clear
-  - yes | heroku keys:add
-  - heroku plugins:install https://github.com/heroku/heroku-repo.git
-  - heroku plugins:install https://github.com/glenngillen/heroku-exit-status.git
-  - heroku repo:purge_cache
-
-script:
-  - yes | git push heroku master
-  - heroku run "bin/test"
+    - SHUNIT_HOME="/tmp/shunit2/source/2.1"
