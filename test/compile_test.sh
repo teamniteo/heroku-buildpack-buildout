@@ -82,3 +82,29 @@ compileWithEnvVars()
   assertCaptured "Use setuptools version: ${VERSION_SETUPTOOLS}"
   assertCaptured "Done"
 }
+
+testBuildoutVerbosityFail()
+{
+    # make sure the test failed if BUILDOUT_VERBOSITY set to something else
+    # other than -v, -vv, -vvv, etc.
+
+    # set Buildout verbosity
+    echo "foo " > $ENV_DIR/BUILDOUT_VERBOSITY
+
+    capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+    assertEquals 1 ${rtrn}
+    assertCaptured "You need to set BUILDOUT_VERBOSITY to -v, -vv, -vvv, etc."
+}
+
+testBootstrapVerbosityFail()
+{
+    # make sure the test failed if BOOTSTRAP_VERBOSITY set to something else
+    # other than -v, -vv, -vvv, etc.
+
+    # set Bootstrap verbosity
+    echo "bar" > $ENV_DIR/BOOTSTRAP_VERBOSITY
+
+    capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+    assertEquals 1 ${rtrn}
+    assertCaptured "You need to set BOOTSTRAP_VERBOSITY to -v, -vv, -vvv, etc."
+}
