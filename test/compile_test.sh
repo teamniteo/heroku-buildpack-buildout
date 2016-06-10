@@ -67,6 +67,8 @@ compileWithEnvVars()
   echo "buildout.cfg" > $ENV_DIR/BUILDOUT_CFG
   # set Buildout verbosity
   echo "-v" > $ENV_DIR/BUILDOUT_VERBOSITY
+  # set Bootstrap verbosity
+  echo "-v" > $ENV_DIR/BOOTSTRAP_VERBOSITY
   # set pip version
   echo "8.1.1" > $ENV_DIR/VERSION_PIP
   # set setuptools version
