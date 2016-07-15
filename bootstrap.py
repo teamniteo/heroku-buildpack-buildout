@@ -40,7 +40,9 @@ this script from going over the network.
 '''
 
 parser = OptionParser(usage=usage)
-parser.add_option("-v", "--version", help="use a specific zc.buildout version")
+parser.add_option("-v", "--verbose",
+                  dest="verbose_consts", action="append_const", const="v",
+                  help="Display more informations.")
 
 parser.add_option("-t", "--accept-buildout-test-releases",
                   dest='accept_buildout_test_releases',
@@ -59,6 +61,8 @@ parser.add_option("-f", "--find-links",
 parser.add_option("--allow-site-packages",
                   action="store_true", default=False,
                   help=("Let bootstrap.py use existing site packages"))
+parser.add_option("--buildout-version",
+                  help="Use a specific zc.buildout version")
 parser.add_option("--setuptools-version",
                   help="use a specific setuptools version")
 
@@ -114,6 +118,15 @@ cmd = [sys.executable, '-c',
        'from setuptools.command.easy_install import main; main()',
        '-mZqNxd', tmpeggs]
 
+verbose = ''
+if options.verbose_consts:
+    # convert verbose_consts list to option string e.g. -v, -vv, -vvv etc.
+    verbose = '-%s' % ''.join(options.verbose_consts)
+
+if verbose:
+    # add verbose option to python cmd
+    cmd.append(verbose)
+
 find_links = os.environ.get(
     'bootstrap-testing-find-links',
     options.find_links or
@@ -127,7 +140,7 @@ setuptools_path = ws.find(
     pkg_resources.Requirement.parse('setuptools')).location
 
 requirement = 'zc.buildout'
-version = options.version
+version = options.buildout_version
 if version is None and not options.accept_buildout_test_releases:
     # Figure out the most recent final version of zc.buildout.
     import setuptools.package_index
@@ -184,6 +197,10 @@ if not [a for a in args if '=' not in a]:
 # if -c was provided, we push it back into args for buildout' main function
 if options.config_file is not None:
     args[0:0] = ['-c', options.config_file]
+
+# add verbose option to zc.buildout
+if verbose:
+    args[0:0] = [verbose, ]
 
 zc.buildout.buildout.main(args)
 shutil.rmtree(tmpeggs)

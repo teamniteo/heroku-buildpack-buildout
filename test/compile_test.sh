@@ -35,7 +35,7 @@ testCompile()
   assertEquals 0 ${rtrn}
   assertNotCaptured "-----> Use PYPICloud"
   assertCaptured "Cache empty, start from scratch"
-  assertCaptured "Using default: buildout.cfg"
+  assertCaptured "Use default buildout.cfg"
   assertCaptured "Use default buildout verbosity"
   assertCaptured "Use default bootstrap verbosity"
   assertCaptured "Use default pip version: ${VERSION_PIP}"
@@ -67,6 +67,8 @@ compileWithEnvVars()
   echo "buildout.cfg" > $ENV_DIR/BUILDOUT_CFG
   # set Buildout verbosity
   echo "-v" > $ENV_DIR/BUILDOUT_VERBOSITY
+  # set Bootstrap verbosity
+  echo "-v" > $ENV_DIR/BOOTSTRAP_VERBOSITY
   # set pip version
   echo "8.1.1" > $ENV_DIR/VERSION_PIP
   # set setuptools version
@@ -81,4 +83,30 @@ compileWithEnvVars()
   assertCaptured "Use pip version: ${VERSION_PIP}"
   assertCaptured "Use setuptools version: ${VERSION_SETUPTOOLS}"
   assertCaptured "Done"
+}
+
+testBuildoutVerbosityFail()
+{
+    # make sure the test failed if BUILDOUT_VERBOSITY set to something else
+    # other than -v, -vv, -vvv, etc.
+
+    # set Buildout verbosity
+    echo "foo " > $ENV_DIR/BUILDOUT_VERBOSITY
+
+    capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+    assertEquals 1 ${rtrn}
+    assertCaptured "You need to set BUILDOUT_VERBOSITY to -v, -vv, -vvv, etc."
+}
+
+testBootstrapVerbosityFail()
+{
+    # make sure the test failed if BOOTSTRAP_VERBOSITY set to something else
+    # other than -v, -vv, -vvv, etc.
+
+    # set Bootstrap verbosity
+    echo "bar" > $ENV_DIR/BOOTSTRAP_VERBOSITY
+
+    capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+    assertEquals 1 ${rtrn}
+    assertCaptured "You need to set BOOTSTRAP_VERBOSITY to -v, -vv, -vvv, etc."
 }

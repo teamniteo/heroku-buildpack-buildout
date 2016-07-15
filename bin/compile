@@ -11,7 +11,7 @@ BUILD_DIR=$1  # -> temp dir that contains whatever is in the git repo
 CACHE_DIR=$2  # -> use this dir for caching between compiles
 ENV_DIR=$3  # -> environment variables are stored as files inside here
 # where Python will be located when this slug is in heroku runtime
-# deafult to /app if not set
+# default to /app if not set
 APP_DIR=${4:-/app}
 
 # make sure dirs exist
@@ -50,13 +50,20 @@ if [ -f $ENV_DIR/BUILDOUT_CFG ]; then
     echo "Found ${BUILDOUT_CFG}" | indent
 else
     export "BUILDOUT_CFG=buildout.cfg"
-    echo "Using default: buildout.cfg" | indent
+    echo "Use default buildout.cfg" | indent
 fi
 
 echo "-----> Read BUILDOUT_VERBOSITY from env vars, or use default"
 if [ -f $ENV_DIR/BUILDOUT_VERBOSITY ]; then
-    export "BUILDOUT_VERBOSITY=$(cat $ENV_DIR/BUILDOUT_VERBOSITY)"
-    echo "Use buildout verbosity: ${BUILDOUT_VERBOSITY}" | indent
+    # simple trimming
+    TRIMMED_BUILDOUT_VERBOSITY=$(cat $ENV_DIR/BUILDOUT_VERBOSITY | xargs)
+    if [[ $TRIMMED_BUILDOUT_VERBOSITY =~ ^\-v+$ ]]; then
+        export "BUILDOUT_VERBOSITY=$TRIMMED_BUILDOUT_VERBOSITY"
+        echo "Use buildout verbosity: ${BUILDOUT_VERBOSITY}" | indent
+    else
+        echo "You need to set BUILDOUT_VERBOSITY to -v, -vv, -vvv, etc." | indent
+        exit 1
+    fi
 else
     export "BUILDOUT_VERBOSITY="
     echo "Use default buildout verbosity" | indent
@@ -64,8 +71,15 @@ fi
 
 echo "-----> Read BOOTSTRAP_VERBOSITY from env vars, or use default"
 if [ -f $ENV_DIR/BOOTSTRAP_VERBOSITY ]; then
-    export "BOOTSTRAP_VERBOSITY=$(cat $ENV_DIR/BOOTSTRAP_VERBOSITY)"
-    echo "Use bootstrap verbosity: ${BOOTSTRAP_VERBOSITY}" | indent
+    # simple trimming
+    TRIMMED_BOOTSTRAP_VERBOSITY=$(cat $ENV_DIR/BOOTSTRAP_VERBOSITY | xargs)
+    if [[ $TRIMMED_BOOTSTRAP_VERBOSITY =~ ^\-v+$ ]]; then
+        export "BOOTSTRAP_VERBOSITY=$TRIMMED_BOOTSTRAP_VERBOSITY"
+        echo "Use bootstrap verbosity: ${BOOTSTRAP_VERBOSITY}" | indent
+    else
+        echo "You need to set BOOTSTRAP_VERBOSITY to -v, -vv, -vvv, etc." | indent
+        exit 1
+    fi
 else
     export "BOOTSTRAP_VERBOSITY="
     echo "Use default bootstrap verbosity" | indent
