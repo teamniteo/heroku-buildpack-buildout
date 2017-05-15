@@ -38,8 +38,8 @@ testCompile()
   assertCaptured "Use default buildout.cfg"
   assertCaptured "Use default buildout verbosity"
   assertCaptured "Use default bootstrap verbosity"
-  assertCaptured "Use default pip version: ${VERSION_PIP}"
-  assertCaptured "Use default setuptools version: 20.4"
+  assertCaptured "Use default pip version: 9.0.1"
+  assertCaptured "Use default setuptools version: 33.1.1"
 
   assertTrue "$APP_DIR/.heroku/ should be present in runtime." "[ -d $APP_DIR/.heroku ]"
   assertTrue "python symlink should be present." "[ -L $APP_DIR/.heroku/python ]"

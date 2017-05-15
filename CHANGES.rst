@@ -1,6 +1,35 @@
 Changelog
 =========
 
+2.3 (2017-05-15)
+----------------
+
+- Use a more recent setuptools and pip.
+  [zupo]
+
+
+2.2.1 (2016-03-31)
+------------------
+
+- Rewrite pip and setuptools version declaration. ENV variable PIP_VERSION is
+  being use as hint for tools and pip itself.
+  [dz0ny]
+
+
+2.2 (2016-03-29)
+----------------
+
+- Pin pip and setuptools versions.
+  [zupo]
+
+
+2.1 (2016-02-25)
+----------------
+
+- Add support for BOOTSTRAP_VERBOSITY.
+  [dz0ny]
+
+
 2.0.1 (2015-12-12)
 ------------------
 
