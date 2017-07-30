@@ -2,7 +2,7 @@
 # bin/detect <build-dir>
 
 BUILD_DIR=$1
-if [ ! -f $BUILD_DIR/buildout.cfg ] && [ ! -f $BUILD_DIR/bootstrap.py ]; then
+if [ ! -f $BUILD_DIR/buildout.cfg ]; then
   exit 1
 fi
 

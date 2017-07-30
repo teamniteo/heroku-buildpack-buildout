@@ -1,8 +1,6 @@
-# This file needs to be here to keep the Python buildpack happy, otherwise it
-# would pip install the setup.py and pull all eggs listed in setup.py into
-# pip's environment -> we don't want that because we use zc.buildout to prepare
-# our environment.
-#
-# Besides being here, this file needs at least one item, so we're installing
-# some jokes.
-pyjokes
+# These libraries are the minimum needed to bootstrap a buildout environment
+# in current directory on Heroku. DO NOT put project dependencies here, they
+# should be managed by buildout.
+pip==9.0.1
+setuptools==36.2.3
+zc.buildout==2.9.3

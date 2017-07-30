@@ -1,8 +1,18 @@
 Changelog
 =========
 
+2.4 (2017-07-30)
+----------------
+
+- No longer use bootstrap.py, but rather install zc.buildout with pip.
+  [zupo]
+
+
 2.3 (2017-05-15)
 ----------------
+
+- A ton of cleanup. Tests.
+  [vietdt]
 
 - Use a more recent setuptools and pip.
   [zupo]

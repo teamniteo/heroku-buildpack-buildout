@@ -14,20 +14,23 @@ afterSetUp()
     virtualenv ${BUILD_DIR}/.heroku/python || ln -s ${BUILDPACK_HOME}/.heroku/python $BUILD_DIR/.heroku/python
   fi
 
-  # copy default bootstrap.py & buildout.cfg to BUILD_DIR
-  cp ${BUILDPACK_HOME}/bootstrap.py ${BUILD_DIR}/bootstrap.py
+  # copy default buildout.cfg to BUILD_DIR
   cp ${BUILDPACK_HOME}/buildout.cfg ${BUILD_DIR}/buildout.cfg
+
+  # install buildout dependencies
+  ${BUILD_DIR}/.heroku/python/bin/pip install -r ${BUILDPACK_HOME}/requirements.txt -U
+
 }
 
-testPythonBuildpackFail()
-{
-  # make sure the test failed if python not found in $BUILD_DIR/.heroku/
-  rm -rf ${BUILD_DIR}/.heroku/python
+# testPythonBuildpackFail()
+# {
+#   # make sure the test failed if python not found in $BUILD_DIR/.heroku/
+#   rm -rf ${BUILD_DIR}/.heroku/python
 
-  capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
-  assertEquals 1 ${rtrn}
-  assertCaptured "-----> This buildpack depends on heroku-buildpack-python."
-}
+#   capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+#   assertEquals 1 ${rtrn}
+#   assertCaptured "-----> This buildpack depends on heroku-buildpack-python."
+# }
 
 testCompile()
 {
@@ -37,9 +40,6 @@ testCompile()
   assertCaptured "Cache empty, start from scratch"
   assertCaptured "Use default buildout.cfg"
   assertCaptured "Use default buildout verbosity"
-  assertCaptured "Use default bootstrap verbosity"
-  assertCaptured "Use default pip version: 9.0.1"
-  assertCaptured "Use default setuptools version: 33.1.1"
 
   assertTrue "$APP_DIR/.heroku/ should be present in runtime." "[ -d $APP_DIR/.heroku ]"
   assertTrue "python symlink should be present." "[ -L $APP_DIR/.heroku/python ]"
@@ -57,56 +57,35 @@ testCompile()
   compileWithEnvVars
 }
 
-compileWithEnvVars()
-{
-  #-* test compile with env vars set *-#
-  # set credentials for third party PyPI installations
-  echo "foo" > $ENV_DIR/PYPICLOUD_USERNAME
-  echo "bar" > $ENV_DIR/PYPICLOUD_PASSWORD
-  # set BUILDOUT_CFG file
-  echo "buildout.cfg" > $ENV_DIR/BUILDOUT_CFG
-  # set Buildout verbosity
-  echo "-v" > $ENV_DIR/BUILDOUT_VERBOSITY
-  # set Bootstrap verbosity
-  echo "-v" > $ENV_DIR/BOOTSTRAP_VERBOSITY
-  # set pip version
-  echo "8.1.1" > $ENV_DIR/VERSION_PIP
-  # set setuptools version
-  echo "20.4" > $ENV_DIR/VERSION_SETUPTOOLS
+# compileWithEnvVars()
+# {
+#   #-* test compile with env vars set *-#
+#   # set credentials for third party PyPI installations
+#   echo "foo" > $ENV_DIR/PYPICLOUD_USERNAME
+#   echo "bar" > $ENV_DIR/PYPICLOUD_PASSWORD
+#   # set BUILDOUT_CFG file
+#   echo "buildout.cfg" > $ENV_DIR/BUILDOUT_CFG
+#   # set Buildout verbosity
+#   echo "-v" > $ENV_DIR/BUILDOUT_VERBOSITY
 
-  capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
-  assertEquals 0 ${rtrn}
-  assertCaptured "Get buildout results from the previous build" # cache worked
-  assertCaptured "-----> Use PYPICloud"
-  assertCaptured "Found ${BUILDOUT_CFG}"
-  assertCaptured "Use buildout verbosity: ${BUILDOUT_VERBOSITY}"
-  assertCaptured "Use pip version: ${VERSION_PIP}"
-  assertCaptured "Use setuptools version: ${VERSION_SETUPTOOLS}"
-  assertCaptured "Done"
-}
+#   capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+#   assertEquals 0 ${rtrn}
+#   assertCaptured "Get buildout results from the previous build" # cache worked
+#   assertCaptured "-----> Use PYPICloud"
+#   assertCaptured "Found ${BUILDOUT_CFG}"
+#   assertCaptured "Use buildout verbosity: ${BUILDOUT_VERBOSITY}"
+#   assertCaptured "Done"
+# }
 
-testBuildoutVerbosityFail()
-{
-    # make sure the test failed if BUILDOUT_VERBOSITY set to something else
-    # other than -v, -vv, -vvv, etc.
+# testBuildoutVerbosityFail()
+# {
+#     # make sure the test failed if BUILDOUT_VERBOSITY set to something else
+#     # other than -v, -vv, -vvv, etc.
 
-    # set Buildout verbosity
-    echo "foo " > $ENV_DIR/BUILDOUT_VERBOSITY
+#     # set Buildout verbosity
+#     echo "foo " > $ENV_DIR/BUILDOUT_VERBOSITY
 
-    capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
-    assertEquals 1 ${rtrn}
-    assertCaptured "You need to set BUILDOUT_VERBOSITY to -v, -vv, -vvv, etc."
-}
-
-testBootstrapVerbosityFail()
-{
-    # make sure the test failed if BOOTSTRAP_VERBOSITY set to something else
-    # other than -v, -vv, -vvv, etc.
-
-    # set Bootstrap verbosity
-    echo "bar" > $ENV_DIR/BOOTSTRAP_VERBOSITY
-
-    capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
-    assertEquals 1 ${rtrn}
-    assertCaptured "You need to set BOOTSTRAP_VERBOSITY to -v, -vv, -vvv, etc."
-}
+#     capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
+#     assertEquals 1 ${rtrn}
+#     assertCaptured "You need to set BUILDOUT_VERBOSITY to -v, -vv, -vvv, etc."
+# }

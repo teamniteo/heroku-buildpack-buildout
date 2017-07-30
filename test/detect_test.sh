@@ -5,8 +5,7 @@
 testDetect()
 {
   touch ${BUILD_DIR}/buildout.cfg
-  touch ${BUILD_DIR}/bootstrap.sh
-  
+
   detect
   assertCapturedSuccess
   assertCaptured "Buildout"
