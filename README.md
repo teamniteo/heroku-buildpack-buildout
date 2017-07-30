@@ -18,11 +18,9 @@ This buildpack depends on the [official Heroku Python buildpack](https://github.
     $ heroku buildpacks:add heroku/python
     $ heroku buildpacks:add https://github.com/niteoweb/heroku-buildpack-buildout.git
 
-The buildpack will detect your app as a Buildout-powered-Python app if the repo has `buildout.cfg` and ``bootstrap.py`` files in the root. The buildpack will use Python compiled by heroku-buildpack-python to run Buildout to build your environment.
+Use the `requirements.txt` file to install the wanted version of `pip`, `setuptools` and `zc.buildout`. The Heroku Python buildpack know how to use pip to install libraries listed in `requirements.txt` so you just need to add the file.
 
-    $ cat bootstrap.py
-    """Bootstrap a buildout-based project
-    ...
+The buildpack will detect your app as a Buildout-powered-Python app if the repo has the `buildout.cfg` file in root. The buildpack will use Python compiled by heroku-buildpack-python to run Buildout to build your environment.
 
     $ cat buildout.cfg
     [buildout]
@@ -46,7 +44,6 @@ Lastly, push your changes to Heroku to build your app:
     -----> Use build cache
     -----> Read BUILDOUT_CFG from env vars, or use default
     -----> Read BUILDOUT_VERBOSITY from env vars, or use default
-    -----> Read BOOTSTRAP_PY_URL from env vars, or use default
     -----> Init buildout
     ...
     -----> Run bin/buildout -c buildout.cfg
@@ -65,8 +62,6 @@ Set Python version
 ------------------
 
 You can set an arbitrary Python version with a `runtime.txt` file.
-You need an empty `requirements.txt` file to trigger the python buildpack.
-An empty `requirements.txt` and a `runtime.txt` is only needed if you want to use a specific Python version. If those files are missing, it will simply use the globally installed Python.
 
     $ cat runtime.txt
     python-3.5.0
@@ -91,4 +86,4 @@ To run an arbitrary *.cfg file such as ``heroku.cfg``, set the following environ
 
     $ heroku config:add BUILDOUT_CFG=heroku.cfg
 
-Note that you have to set ``relative-paths = true`` in your arbitrary *.cfg file.
+Remember that you have to set ``relative-paths = true`` in your arbitrary *.cfg file.
