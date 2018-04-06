@@ -14,6 +14,22 @@ ENV_DIR=$3  # -> environment variables are stored as files inside here
 # default to /app if not set
 APP_DIR=${4:-/app}
 
+# Export env vars from ENV_DIR to environment, so it's easier to access them
+# Taken from https://devcenter.heroku.com/articles/buildpack-api
+export_env_dir() {
+  env_dir=$1
+  whitelist_regex=${2:-''}
+  blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+  if [ -d "$env_dir" ]; then
+    for e in $(ls $env_dir); do
+      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
+      export "$e=$(cat $env_dir/$e)"
+      :
+    done
+  fi
+}
+export_env_dir "$ENV_DIR"
+
 # make sure dirs exist
 mkdir -p $CACHE_DIR
 
@@ -21,14 +37,6 @@ if [ ! -f "$BUILD_DIR/.heroku/python/bin/python" ]; then
     echo "-----> This buildpack depends on heroku-buildpack-python."
     echo "You need to run heroku-buildpack-python before heroku-buildpack-buildout" | indent
     exit 1
-fi
-
-# support for buildouts using collective.recipe.environment to set credentials
-# for third party PyPI installations
-if [ -f $ENV_DIR/PYPICLOUD_USERNAME ] && [ -f $ENV_DIR/PYPICLOUD_PASSWORD ]; then
-    echo "-----> Use PYPICloud"
-    export "PYPICLOUD_USERNAME=$(cat $ENV_DIR/PYPICLOUD_USERNAME)"
-    export "PYPICLOUD_PASSWORD=$(cat $ENV_DIR/PYPICLOUD_PASSWORD)"
 fi
 
 echo "-----> Use build cache"

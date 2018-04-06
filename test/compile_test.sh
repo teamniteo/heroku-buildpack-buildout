@@ -36,7 +36,6 @@ testCompile()
 {
   capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
   assertEquals 0 ${rtrn}
-  assertNotCaptured "-----> Use PYPICloud"
   assertCaptured "Cache empty, start from scratch"
   assertCaptured "Use default buildout.cfg"
   assertCaptured "Use default buildout verbosity"
@@ -60,9 +59,9 @@ testCompile()
 compileWithEnvVars()
 {
   #-* test compile with env vars set *-#
-  # set credentials for third party PyPI installations
-  echo "foo" > $ENV_DIR/PYPICLOUD_USERNAME
-  echo "bar" > $ENV_DIR/PYPICLOUD_PASSWORD
+  # set arbitrary env vars
+  echo "foo" > $ENV_DIR/FOO
+  echo "bar" > $ENV_DIR/BAR
   # set BUILDOUT_CFG file
   echo "buildout.cfg" > $ENV_DIR/BUILDOUT_CFG
   # set Buildout verbosity
@@ -71,7 +70,6 @@ compileWithEnvVars()
   capture ${BUILDPACK_HOME}/bin/compile ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} ${APP_DIR}
   assertEquals 0 ${rtrn}
   assertCaptured "Get buildout results from the previous build" # cache worked
-  assertCaptured "-----> Use PYPICloud"
   assertCaptured "Found ${BUILDOUT_CFG}"
   assertCaptured "Use buildout verbosity: ${BUILDOUT_VERBOSITY}"
   assertCaptured "Done"

@@ -1,6 +1,6 @@
 # These libraries are the minimum needed to bootstrap a buildout environment
-# in current directory on Heroku. DO NOT put project dependencies here, they
-# should be managed by buildout.
-pip==9.0.1
-setuptools==36.2.3
-zc.buildout==2.9.3
+# in current directory. DO NOT put project dependencies here, they should be
+# managed by buildout.
+pip==9.0.3
+setuptools==38.7.0
+zc.buildout==2.11.2

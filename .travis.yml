@@ -5,7 +5,7 @@ branches:
     - master
 
 before_install:
-  - git clone https://github.com/kward/shunit2.git /tmp/shunit2
+  - git clone https://github.com/kward/shunit2.git /tmp/shunit2/src
   - git clone https://github.com/heroku/heroku-buildpack-testrunner.git /tmp/testrunner
 
 install: true
@@ -14,4 +14,4 @@ script: /tmp/testrunner/bin/run -c .
 
 env:
   global:
-    - SHUNIT_HOME="/tmp/shunit2/source/2.1"
+    - SHUNIT_HOME="/tmp/shunit2"
