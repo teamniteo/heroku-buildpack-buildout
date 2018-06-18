@@ -89,8 +89,6 @@ To run an arbitrary *.cfg file such as ``heroku.cfg``, set the following environ
 Remember that you have to set ``relative-paths = true`` in your arbitrary *.cfg file.
 
 
-We're hiring!
-=============
+## We're hiring!
 
-At Niteo we regularly contribute back to the Open Source community. If you do too, we'd like to invite you to `join our team
-<https://niteo.co/careers/>`_!
+At Niteo we regularly contribute back to the Open Source community. If you do too, we'd like to invite you to [join our team](https://niteo.co/careers)!
